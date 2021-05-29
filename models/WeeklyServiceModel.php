@@ -113,4 +113,14 @@ class WeeklyServiceModel {
         $stmt->bindParam(3, $service_time, PDO::PARAM_STR);
         $stmt->execute();
     }
+
+    function updateServiceRecordsOf($oldUname, $newUname){
+        $UpdateQuery = "UPDATE {$this->table_name} SET uname=? WHERE uname=?";
+        $stmt = $this->connect->prepare($UpdateQuery);
+        $nname = $this->sanitizedInput($newUname);
+        $oUname = $this->sanitizedInput($oldUname);
+        $stmt->bindParam(1, $nname, PDO::PARAM_STR);
+        $stmt->bindParam(2, $oUname, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }

@@ -46,13 +46,16 @@ if(isset($_SESSION['utype']) && ($_SESSION['utype']=='ADMIN' || $_SESSION['utype
         $bdate =$_POST['bdate'];
         $address = strtoupper(trim(preg_replace('!\s+!', ' ',$_POST['newAddress'])));
 
+        $profile = $acModel->readProfile($id);
+        $oldUname = $profile['uname'];
         if($acModel->updateProfile($id, $uname, $contact, $upass, $utype, $fname, $mname, $lname, $bdate, $address)){
             $_SESSION['msg'] = "<span class='fas fa-exclamation-circle text-success'> Account update successful!</span>";
             if($id==$activeUserId){
-                    $_SESSION['fullname'] = $fname.' '.$mname.' '.$lname;
-                    $_SESSION['uname'] = $uname;
-                    header('location:myAccount.php');
+                $_SESSION['fullname'] = $fname.' '.$mname.' '.$lname;
+                $_SESSION['uname'] = $uname;
+                header('location:myAccount.php');
             }
+            $weeklyService->updateServiceRecordsOf($oldUname, $uname);
         } else {
             $_SESSION['msg'] = "<span class='fas fa-exclamation-circle text-danger'> Account update failed!</span>";
         }

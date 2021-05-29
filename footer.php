@@ -142,7 +142,7 @@
             }
         });
 
-        $('#searchcAcc').on('input',function(){
+        $('#searchcAcc').on('input', function(){
             $('#searchResults').empty();
             var search = $(this).val();
             if(search != ""){
@@ -157,7 +157,7 @@
             }
         });
 
-        $('#searchcAcc').on('blur',function(){
+        $('#searchcAcc').on('blur', function(){
             if(!$('#searchResults').is(':focus')){
                 $('#searchResults').empty();
             }

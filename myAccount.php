@@ -4,12 +4,14 @@ $title='FCI | MY ACCOUNT';
 $selected=6;
 require_once './security/Database.php';
 require_once './models/AccountModel.php';
+require_once './models/WeeklyServiceModel.php';
 $db = new Database();
 $acModel = new AccountModel($db->getConnection());
+$weeklyService = new WeeklyServiceModel($db->getConnection());
 
 if(isset ($_POST['updateID'])){
     $id = $_POST['updateID'];
-    $activeUserId = $acModel->getAccountId($_SESSION['uname']);
+    $activeUser = $_SESSION['uname'];
 
     $uname = str_replace(' ', '',$_POST['newUsername']);
     $contact =$_POST['newContactNum'];
@@ -22,6 +24,9 @@ if(isset ($_POST['updateID'])){
     $address = strtoupper(trim(preg_replace('!\s+!', ' ',$_POST['newAddress'])));
 
     if($acModel->updateProfile($id, $uname, $contact, $upass, $utype, $fname, $mname, $lname, $bdate, $address)){
+        $weeklyService->updateServiceRecordsOf($activeUser, $uname);
+        $_SESSION['fullname'] = $fname.' '.$mname.' '.$lname;
+        $_SESSION['uname'] = $uname;
         $_SESSION['msg'] = "<span class='fas fa-exclamation-circle text-success'> Account update successful!</span>";
     } else {
         $_SESSION['msg'] = "<span class='fas fa-exclamation-circle text-danger'> Account update failed!</span>";
